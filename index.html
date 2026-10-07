@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinVibe | Gestão Financeira Inteligente com IA</title>
+    <meta name="description" content="Controle suas finanças pessoais de forma conversacional e intuitiva através de Inteligência Artificial e Vibe Coding.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i data-lucide="sparkles"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>FinVibe<span>.ai</span></h2>
+                    <span class="badge-vibe">Vibe Edition</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard" id="nav-dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-tab="chat" id="nav-chat">
+                    <div class="nav-icon-wrapper">
+                        <i data-lucide="bot"></i>
+                        <span class="pulse-dot"></span>
+                    </div>
+                    <span>Agente IA</span>
+                </button>
+                <button class="nav-item" data-tab="transactions" id="nav-transactions">
+                    <i data-lucide="receipt"></i>
+                    <span>Transações</span>
+                </button>
+                <button class="nav-item" data-tab="goals" id="nav-goals">
+                    <i data-lucide="target"></i>
+                    <span>Metas & Sonhos</span>
+                </button>
+                <button class="nav-item" data-tab="insights" id="nav-insights">
+                    <i data-lucide="lightbulb"></i>
+                    <span>Dicas & IA</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="agent-quick-card">
+                    <div class="agent-avatar">
+                        <i data-lucide="cpu"></i>
+                    </div>
+                    <div class="agent-info">
+                        <strong>VibeBot Online</strong>
+                        <p>Assistente de Finanças</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Bar Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-toggle" id="menuToggle" aria-label="Menu">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div>
+                        <h1 id="pageTitle">Dashboard Financeiro</h1>
+                        <p class="subtitle" id="pageSubtitle">Bem-vindo(a) ao seu hub inteligente de finanças pessoais</p>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="btnQuickExpense" title="Adicionar Transação Rápida">
+                        <i data-lucide="plus"></i>
+                        <span class="btn-text">Nova Transação</span>
+                    </button>
+                    <button class="btn btn-primary" id="btnOpenAiModal" title="Falar com o Agente">
+                        <i data-lucide="sparkles"></i>
+                        <span class="btn-text">Conversar com IA</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB 1: DASHBOARD -->
+            <section class="tab-pane active" id="tab-dashboard">
+                <!-- Summary Metrics Cards -->
+                <div class="metrics-grid">
+                    <div class="metric-card balance-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Saldo Total Atual</span>
+                            <div class="metric-icon"><i data-lucide="wallet"></i></div>
+                        </div>
+                        <div class="metric-value" id="cardTotalBalance">R$ 0,00</div>
+                        <div class="metric-footer positive">
+                            <i data-lucide="trending-up"></i>
+                            <span id="balanceStatusText">Em crescimento este mês</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card income-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Receitas do Mês</span>
+                            <div class="metric-icon income"><i data-lucide="arrow-down-left"></i></div>
+                        </div>
+                        <div class="metric-value" id="cardTotalIncome">R$ 0,00</div>
+                        <div class="metric-footer neutral">
+                            <span id="incomeCount">0 entradas registradas</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card expense-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Despesas do Mês</span>
+                            <div class="metric-icon expense"><i data-lucide="arrow-up-right"></i></div>
+                        </div>
+                        <div class="metric-value" id="cardTotalExpense">R$ 0,00</div>
+                        <div class="metric-footer" id="expenseAlertContainer">
+                            <span id="expenseRateText">35% da renda consumida</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card savings-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Economia Projetada</span>
+                            <div class="metric-icon savings"><i data-lucide="piggy-bank"></i></div>
+                        </div>
+                        <div class="metric-value" id="cardTotalSavings">R$ 0,00</div>
+                        <div class="metric-footer positive">
+                            <span id="savingsRateBadge">Meta mensal: 20%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Banner Card -->
+                <div class="ai-spotlight-card">
+                    <div class="ai-spotlight-content">
+                        <div class="ai-tag">
+                            <i data-lucide="sparkles"></i> Insight do Agente Vibe
+                        </div>
+                        <h3 id="spotlightTitle">Pronto para economizar mais este mês?</h3>
+                        <p id="spotlightMessage">Experimente digitar no chat: <em>"Gastei 45 reais no mercado hoje"</em> ou <em>"Qual a melhor forma de economizar R$ 500?"</em>. O Agente cuida de tudo para você!</p>
+                    </div>
+                    <button class="btn btn-light" id="btnGoToChat">
+                        <span>Abrir Chat IA</span>
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="pie-chart"></i> Despesas por Categoria</h3>
+                            <span class="card-badge">Mês Atual</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="bar-chart-3"></i> Fluxo Financeiro (Entradas vs Saídas)</h3>
+                            <span class="card-badge">Histórico</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="flowChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions & Goals Preview Grid -->
+                <div class="bottom-grid">
+                    <!-- Recent Transactions -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3><i data-lucide="clock"></i> Últimas Transações</h3>
+                            <button class="link-btn" data-tab="transactions">Ver todas</button>
+                        </div>
+                        <div class="transactions-mini-list" id="dashboardTransactionsList">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Goals Snapshot -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3><i data-lucide="target"></i> Metas em Andamento</h3>
+                            <button class="link-btn" data-tab="goals">Gerenciar</button>
+                        </div>
+                        <div class="goals-mini-list" id="dashboardGoalsList">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: CHAT COM O AGENTE IA -->
+            <section class="tab-pane" id="tab-chat">
+                <div class="chat-wrapper">
+                    <!-- Chat Header -->
+                    <div class="chat-header">
+                        <div class="chat-agent-profile">
+                            <div class="chat-agent-avatar">
+                                <i data-lucide="bot"></i>
+                                <span class="status-indicator online"></span>
+                            </div>
+                            <div>
+                                <h3>VibeBot AI</h3>
+                                <p>Consultor de Finanças & Processador em Linguagem Natural</p>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="btn-icon" id="btnClearChat" title="Limpar conversa">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages List -->
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot-message">
+                            <div class="msg-avatar"><i data-lucide="bot"></i></div>
+                            <div class="msg-bubble">
+                                <p>👋 <strong>Olá! Eu sou o seu Agente Vibe de Finanças Pessoais.</strong></p>
+                                <p>Você pode controlar tudo apenas conversando comigo em linguagem natural! Por exemplo:</p>
+                                <ul class="chat-examples">
+                                    <li class="chip-prompt">"Gastei R$ 68,50 no almoço com a equipe"</li>
+                                    <li class="chip-prompt">"Recebi R$ 3.500 de salário"</li>
+                                    <li class="chip-prompt">"Paguei R$ 180 na conta de energia"</li>
+                                    <li class="chip-prompt">"Criar meta Reserva de Emergência de R$ 5000"</li>
+                                    <li class="chip-prompt">"Como posso economizar 200 reais esse mês?"</li>
+                                </ul>
+                                <span class="msg-time">Agora</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Suggestions / Quick Chips -->
+                    <div class="chat-chips-bar" id="chatQuickChips">
+                        <button class="chip-btn" data-query="Gastei R$ 42,00 no Uber hoje">🚗 "Gastei R$ 42 no Uber"</button>
+                        <button class="chip-btn" data-query="Recebi R$ 1.200 de trabalho extra">💰 "Recebi R$ 1.200 de freela"</button>
+                        <button class="chip-btn" data-query="Gastei R$ 150 no supermercado">🛒 "Gastei R$ 150 no mercado"</button>
+                        <button class="chip-btn" data-query="Qual é o meu saldo atual e resumo?">📊 "Qual é o meu saldo?"</button>
+                        <button class="chip-btn" data-query="Me dê uma dica para economizar">💡 "Dicas de economia"</button>
+                    </div>
+
+                    <!-- Chat Input Box -->
+                    <form class="chat-input-form" id="chatForm">
+                        <div class="chat-input-container">
+                            <input 
+                                type="text" 
+                                id="chatInput" 
+                                placeholder="Digite um gasto, ganho ou pergunta sobre suas finanças..." 
+                                autocomplete="off"
+                                required
+                            />
+                            <button type="submit" class="btn-send" id="btnSendMessage" title="Enviar mensagem">
+                                <i data-lucide="send"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 3: TRANSAÇÕES COMPLETAS -->
+            <section class="tab-pane" id="tab-transactions">
+                <div class="transactions-container">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="txSearchInput" placeholder="Buscar por descrição ou categoria...">
+                        </div>
+                        <div class="filter-groups">
+                            <select id="txFilterType" class="select-styled">
+                                <option value="all">Todos os tipos</option>
+                                <option value="income">Apenas Receitas (+)</option>
+                                <option value="expense">Apenas Despesas (-)</option>
+                            </select>
+                            <select id="txFilterCategory" class="select-styled">
+                                <option value="all">Todas as Categorias</option>
+                                <option value="Alimentação">Alimentação</option>
+                                <option value="Transporte">Transporte</option>
+                                <option value="Moradia">Moradia</option>
+                                <option value="Lazer">Lazer</option>
+                                <option value="Saúde">Saúde</option>
+                                <option value="Educação">Educação</option>
+                                <option value="Salário">Salário & Renda</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                            <button class="btn btn-secondary" id="btnExportCSV" title="Exportar Extrato">
+                                <i data-lucide="download"></i>
+                                <span>Exportar CSV</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="transactions-table-wrapper">
+                        <table class="styled-table" id="transactionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Categoria</th>
+                                    <th>Origem</th>
+                                    <th>Valor</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody">
+                                <!-- Preenchido dinamicamente via JS -->
+                            </tbody>
+                        </table>
+                        <div class="empty-state" id="txEmptyState" style="display: none;">
+                            <i data-lucide="inbox"></i>
+                            <p>Nenhuma transação encontrada para este filtro.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: METAS E SONHOS -->
+            <section class="tab-pane" id="tab-goals">
+                <div class="goals-container">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Seus Objetivos & Metas de Economia</h2>
+                            <p class="subtitle">Defina valores-alvo e acompanhe a sua evolução financeira de forma visual</p>
+                        </div>
+                        <button class="btn btn-primary" id="btnOpenNewGoalModal">
+                            <i data-lucide="plus-circle"></i>
+                            <span>Nova Meta</span>
+                        </button>
+                    </div>
+
+                    <div class="goals-grid" id="goalsCardsGrid">
+                        <!-- Preenchido dinamicamente via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: DICAS E INSIGHTS DA IA -->
+            <section class="tab-pane" id="tab-insights">
+                <div class="insights-container">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Hub de Inteligência & Insights</h2>
+                            <p class="subtitle">Análises em tempo real geradas pelo Agente Vibe baseadas no seu perfil financeiro</p>
+                        </div>
+                        <button class="btn btn-secondary" id="btnRefreshInsights">
+                            <i data-lucide="refresh-cw"></i>
+                            <span>Atualizar Análise</span>
+                        </button>
+                    </div>
+
+                    <div class="insights-grid" id="insightsCardsContainer">
+                        <!-- Preenchido dinamicamente via JS -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: NOVA TRANSAÇÃO MANUAL / RÁPIDA -->
+    <div class="modal-backdrop" id="modalTransaction" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i data-lucide="plus-circle"></i> Adicionar Transação</h3>
+                <button class="modal-close" id="btnCloseTxModal"><i data-lucide="x"></i></button>
+            </div>
+            <form id="formManualTransaction" class="modal-form">
+                <div class="form-group">
+                    <label>Tipo de Transação</label>
+                    <div class="radio-type-group">
+                        <label class="radio-type-label expense-active" id="labelExpenseRadio">
+                            <input type="radio" name="txType" value="expense" checked>
+                            <span><i data-lucide="arrow-up-right"></i> Despesa</span>
+                        </label>
+                        <label class="radio-type-label" id="labelIncomeRadio">
+                            <input type="radio" name="txType" value="income">
+                            <span><i data-lucide="arrow-down-left"></i> Receita</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputTxDesc">Descrição</label>
+                    <input type="text" id="inputTxDesc" placeholder="Ex: Supermercado Mensal" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputTxAmount">Valor (R$)</label>
+                        <input type="number" step="0.01" min="0.01" id="inputTxAmount" placeholder="0,00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTxCategory">Categoria</label>
+                        <select id="inputTxCategory" class="select-styled" required>
+                            <option value="Alimentação">Alimentação</option>
+                            <option value="Transporte">Transporte</option>
+                            <option value="Moradia">Moradia</option>
+                            <option value="Lazer">Lazer</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Educação">Educação</option>
+                            <option value="Salário">Salário & Renda</option>
+                            <option value="Investimentos">Investimentos</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputTxDate">Data</label>
+                    <input type="date" id="inputTxDate" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelTxModal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Transação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: NOVA META -->
+    <div class="modal-backdrop" id="modalGoal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i data-lucide="target"></i> Nova Meta Financeira</h3>
+                <button class="modal-close" id="btnCloseGoalModal"><i data-lucide="x"></i></button>
+            </div>
+            <form id="formGoal" class="modal-form">
+                <div class="form-group">
+                    <label for="inputGoalTitle">Título do Objetivo</label>
+                    <input type="text" id="inputGoalTitle" placeholder="Ex: Viagem de Férias, Reserva de Emergência" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputGoalTarget">Valor Alvo (R$)</label>
+                        <input type="number" step="1" min="1" id="inputGoalTarget" placeholder="Ex: 5000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputGoalCurrent">Valor Atual Já Guardado (R$)</label>
+                        <input type="number" step="1" min="0" id="inputGoalCurrent" placeholder="Ex: 500" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputGoalDeadline">Data Limite Desejada</label>
+                    <input type="date" id="inputGoalDeadline" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelGoalModal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Criar Meta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: APORTE EM META -->
+    <div class="modal-backdrop" id="modalDepositGoal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i data-lucide="piggy-bank"></i> Aportar na Meta</h3>
+                <button class="modal-close" id="btnCloseDepositGoalModal"><i data-lucide="x"></i></button>
+            </div>
+            <form id="formDepositGoal" class="modal-form">
+                <input type="hidden" id="depositGoalId">
+                <p id="depositGoalTitle" class="deposit-meta-title">Guardando para...</p>
+                <div class="form-group">
+                    <label for="inputDepositAmount">Valor do Aporte (R$)</label>
+                    <input type="number" step="0.01" min="1" id="inputDepositAmount" placeholder="Ex: 100,00" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelDepositGoalModal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar Depósito</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
